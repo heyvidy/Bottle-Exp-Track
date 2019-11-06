@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ExpTrack Dashboard</title>
+</head>
+<body>
+	Welcome {{username}} in the template!
+	<hr>
+	<a href="/logout">Logout</a>
+	<hr>
+	<form action="/addexpense" method="POST">
+		<label>Reason</label>
+		<br>
+		<input type="text" name="reason">
+		<br><br>
+		<label>Amount</label>
+		<br>
+		<input type="number" name="amount">
+		<br><br>
+		<button type="submit">Add Expense</button>
+	</form>
+	<hr>
+	
+
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Timestamp</th>
+				<th>Reason</th>
+				<th>Amount</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for expense in allexpenses %}
+			<tr>
+				<td>{{expense.id}}</td>
+				<td>{{expense.timestamp}}</td>
+				<td>{{expense.reason}}</td>
+				<td>{{expense.amount}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</body>
+</html>

@@ -1,6 +1,7 @@
 # runserver.py
 from bottle import get, run, jinja2_view, post, request, redirect, response
 from models import User, Expense, db
+from datetime import datetime
 
 db.connect()
 
@@ -38,6 +39,27 @@ def login():
 	else:
 		return "Invalid Credentials!!"
 
+
+@get("/dashboard")
+@jinja2_view("dashboard.html")
+def dashboard():
+	uid = request.get_cookie("user_id")
+	user = User.get(User.id == uid)
+	
+	expenses = Expense.select().where(Expense.user == user)
+	return {"username" : user.username, "allexpenses": expenses}
+
+
+@post("/addexpense")
+def add_expense():
+	uid = request.get_cookie("user_id")
+	user = User.get(User.id == uid)
+	reason = request.forms.get("reason")
+	amount = request.forms.get("amount")
+	timestamp = datetime.now()
+
+	Expense.create(user=user, reason=reason, amount=amount, timestamp=timestamp)
+	return redirect("/dashboard")
 
 
 run(host="localhost", 

@@ -1,0 +1,12 @@
+<h1>Edit An Expense</h1>
+<form action="/edit/{{expense.id}}" method="POST">
+	<label>Reason</label>
+	<br>
+	<input type="text" name="reason" value="{{expense.reason}}">
+	<br><br>
+	<label>Amount</label>
+	<br>
+	<input type="number" name="amount" value="{{expense.amount}}">
+	<br><br>
+	<button type="submit">Update Expense</button>
+</form>

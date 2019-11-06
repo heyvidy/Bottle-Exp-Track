@@ -62,6 +62,47 @@ def add_expense():
 	return redirect("/dashboard")
 
 
+@get("/delete/<expense_id>")
+def delete_expense(expense_id):
+	expense = Expense.get(Expense.id == expense_id)
+	uid = request.get_cookie("user_id")
+	user = User.get(User.id == uid)
+
+	if expense.user == user:
+		expense.delete_instance()
+		return redirect("/dashboard")
+	else:
+		return "Operation Not Permitted!<br><a href='/dashboard'>Go to Dashbaord</a>"
+
+
+@get("/edit/<expense_id>")
+@jinja2_view("edit_expense.html")
+def edit_expense(expense_id):
+	expense = Expense.get(Expense.id == expense_id)
+	uid = request.get_cookie("user_id")
+	user = User.get(User.id == uid)
+
+	if expense.user == user:
+		return {"expense" : expense}
+	else:
+		return redirect("/dashbaord")
+
+
+@post("/edit/<expense_id>")
+def handle_edit_expense(expense_id):
+	expense = Expense.get(Expense.id == expense_id)
+	uid = request.get_cookie("user_id")
+	user = User.get(User.id == uid)
+
+	if expense.user == user:
+		reason = request.forms.get("reason")
+		amount = request.forms.get("amount")
+		expense.reason = reason
+		expense.amount = amount
+		expense.save()
+	
+	return redirect("/dashboard")
+
 run(host="localhost", 
 	port="8080", 
 	debug=True)

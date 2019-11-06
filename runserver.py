@@ -1,5 +1,5 @@
 # runserver.py
-from bottle import get, run, jinja2_view, post, request, redirect
+from bottle import get, run, jinja2_view, post, request, redirect, response
 from models import User, Expense, db
 
 db.connect()
@@ -21,6 +21,23 @@ def signup():
 	else:
 		User.create(username=username, password=password)
 	return redirect("/")
+
+@post("/login")
+def login():
+	username = request.forms.get('username')
+	password = request.forms.get('password')
+
+	try:
+		user = User.get(User.username == username)
+	except:
+		return "User does not exist!"
+
+	if user.password == password:
+		response.set_cookie("user_id", str(user.id))
+		return redirect("/dashboard")
+	else:
+		return "Invalid Credentials!!"
+
 
 
 run(host="localhost", 
